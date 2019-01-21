@@ -4,6 +4,7 @@ import './App.css'
 
 class App extends Component {
   state = {
+    filter: "",
     boxes: [
       {
         number: Math.random()
@@ -28,11 +29,32 @@ class App extends Component {
     }))
   }
 
-  render() {    
+  updateFilter = (value) => {
+    this.setState({
+      filter: value
+    })     
+  }  
+
+  render() {
+    let shownBoxes;
+    
+    if(this.state.filter === '') {
+      shownBoxes = this.state.boxes;
+    } else {
+      shownBoxes = this.state.boxes.filter((box) => {
+        return box.number.toString().includes(this.state.filter)
+      })
+    }
+
     return (
       <div className="boxes">
+        <input 
+          type="text" 
+          value={this.state.filter}
+          onChange={(event) => this.updateFilter(event.target.value)}
+        ></input>
         <button onClick={this.addNewBox}>Add New Box</button>
-        {this.state.boxes.map((box) => 
+        {shownBoxes.map((box) => 
           <Box key={box.number} number={box.number} removeBox={this.removeBox}/>
         )}
       </div>
